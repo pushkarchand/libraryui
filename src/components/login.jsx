@@ -8,10 +8,11 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import {getApi} from '../services/apiservice';
+import {login} from '../services/apiservice';
 import {stateContext} from '../context';
 import {setIsAuthenticated, setIsLoading} from '../context/action';
 
+// Styles for the login component
 const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
@@ -54,6 +55,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function SignIn({ history }) {
+  // variable declartion like email, password and invalid password
   const classes = useStyles();
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
@@ -61,14 +63,20 @@ export default function SignIn({ history }) {
   const context = useContext(stateContext);
 
 
+  /**
+   * Method to login user with the given password and emailId
+   * @param {*} e 
+   */
   const handleSubmit=async (e)=>{
     e.preventDefault();
     try{
         context.dispatch(setIsLoading(true));
-        const url= `ValidateUserLogin?email=${encodeURIComponent(emailId)}&password=${encodeURIComponent(password)}`;
-        const response= await getApi(url);
-        localStorage.setItem('emailId',encodeURIComponent(emailId));
-        localStorage.setItem('pass',encodeURIComponent(password));
+        const url= `ValidateUserLogin?email=${emailId}&password=${password}`;
+        const response= await login(url);
+        localStorage.setItem('accessToken',response.token);
+        localStorage.setItem('userId',response.userId);
+        localStorage.setItem('role',response.roleType);
+        localStorage.setItem('userCode',response.userCode);
         context.dispatch(setIsAuthenticated(true));
         history.push('/')
         context.dispatch(setIsLoading(false));
@@ -77,14 +85,26 @@ export default function SignIn({ history }) {
     }
   }
 
+  /**
+   * Method to set change in password
+   * @param {*} event 
+   */
   const changeInPassword=(event)=>{
       setPassword(event.target.value)
   }
 
+  /**
+   * Methof to set change in email
+   * @param {*} event 
+   */
   const changeInEmailId=(event)=>{
     setEmailId(event.target.value)
   }
 
+  /**
+   * Method to validate email
+   * @param {*} event 
+   */
   const onEmailChange=(event)=> {
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(event.target.value)){
       setInValidEmail("");
@@ -103,7 +123,9 @@ export default function SignIn({ history }) {
               <Typography component="h1" variant="h5">
                 Sign in
               </Typography>
+              {/* Login form */}
               <form className={classes.form} onSubmit={handleSubmit}>
+                {/* Email input field */}
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <TextField
@@ -122,6 +144,7 @@ export default function SignIn({ history }) {
                       onBlur={onEmailChange}
                     />
                   </Grid>
+                  {/* Password input field */}
                   <Grid item xs={12}>
                     <TextField
                       variant="outlined"
@@ -138,6 +161,7 @@ export default function SignIn({ history }) {
                     />
                   </Grid>
                 </Grid>
+                {/* Button to submit and login */}
                 <Button
                   type="submit"
                   // fullWidth
@@ -148,6 +172,7 @@ export default function SignIn({ history }) {
                 >
                   Sign In
                 </Button>
+                {/* Link to route to signup screen */}
                 <Grid container className={classes.signupmessage} justify="flex-end">
                   <Grid item>
                     <Link className={classes.signup} to="/signup">Create New Account</Link>

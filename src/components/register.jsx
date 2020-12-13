@@ -17,7 +17,9 @@ import {stateContext} from '../context';
 import {setIsLoading} from '../context/action'
 
 
-
+/**
+ * styles for register component
+ */
 const useStyles = makeStyles(theme => ({
   "@global": {
     body: {
@@ -57,7 +59,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+/**
+ * Register component declartion
+ * @param {*} param0 
+ */
 export default function SignUp({history}) {
+  // Variable declartion like email,password,fullname, cnumber, roleType,cardDetails and context
   const classes = useStyles();
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
@@ -68,6 +75,10 @@ export default function SignUp({history}) {
   const [cardDetail, setCardDetail] = useState('');
   const context = useContext(stateContext);
 
+  /**
+   * Method to register user by submitting the form
+   * @param {*} event 
+   */
   const registerUser= async (event)=>{
     event.preventDefault();
     try{
@@ -88,6 +99,10 @@ export default function SignUp({history}) {
     }
   }
 
+/**
+ * method to validate email
+ * @param {*} event 
+ */
  const onEmailChange=(event)=> {
     if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(event.target.value)){
       setInValidEmail("");
@@ -96,6 +111,10 @@ export default function SignUp({history}) {
     }
   }
 
+  /**
+   * method to change in role type
+   * @param {*} event 
+   */
   const handleChangeInroleType = (event) => {
     setRoleType(event.target.value);
   };
@@ -110,8 +129,10 @@ export default function SignUp({history}) {
                 <Typography component="h1" variant="h5">
                   SignUp
                 </Typography>
+                {/* form for registering user */}
                 <form className={classes.form} onSubmit={registerUser}>
                   <Grid container spacing={2}>
+                    {/* full name field */}
                     <Grid item xs={12} sm={12}>
                       <TextField
                         autoComplete="fname"
@@ -127,6 +148,7 @@ export default function SignUp({history}) {
                         autoFocus
                       />
                     </Grid>
+                    {/* email field */}
                     <Grid item xs={12} sm={12}>
                       <TextField
                         variant="outlined"
@@ -144,6 +166,7 @@ export default function SignUp({history}) {
                         autoComplete="email"
                       />
                     </Grid>
+                    {/* passowrd field */}
                     <Grid item xs={12} sm={12}>
                       <TextField
                         autoComplete="password"
@@ -159,6 +182,7 @@ export default function SignUp({history}) {
                         onChange={(e)=>setPassword(e.target.value)}
                       />
                     </Grid>
+                    {/* contact field */}
                    <Grid item xs={12} sm={12}>
                       <TextField
                         variant="outlined"
@@ -173,6 +197,7 @@ export default function SignUp({history}) {
                         onChange={(e)=>setContactNo(e.target.value)}
                       />
                     </Grid>
+                    {/* card details field */}
                     <Grid item xs={12} sm={12}>
                       <TextField
                         variant="outlined"
@@ -188,6 +213,7 @@ export default function SignUp({history}) {
                         onChange={(e)=>setCardDetail(e.target.value)}
                       />
                     </Grid>
+                    {/* User Type field */}
                     <Grid item xs={12} sm={12}>
                         <FormControl variant="outlined" className={classes.formControl}>
                             <InputLabel id="demo-simple-select-outlined-label">User Type</InputLabel>
@@ -199,11 +225,13 @@ export default function SignUp({history}) {
                               label="User Type"
                             >
                               <MenuItem value={1}>Student</MenuItem>
-                              <MenuItem value={2}>Business Owner</MenuItem>
+                              <MenuItem value={2}>Store Owner</MenuItem>
+                              <MenuItem value={3}>Admin</MenuItem>
                             </Select>
                           </FormControl>
                     </Grid>
                   </Grid>
+                  {/* Signup button */}
                   <Button
                     type="submit"
                     smallSize
@@ -214,6 +242,7 @@ export default function SignUp({history}) {
                   >
                     Sign Up
                   </Button>
+                  {/* Link to login screen */}
                   <Grid container className={classes.signup} justify="flex-end">
                     <Grid item>
                       <Link to="/login">Already have an account? Login</Link>

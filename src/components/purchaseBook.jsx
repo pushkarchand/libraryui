@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
 export default function PurchaseBook({isOpen,book,close}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(isOpen);
-  const [title] = useState(book.Title||'');
-  const [price, setPrice] = useState(book.Price||0);
+  const [title] = useState(book.title||'');
+  const [price, setPrice] = useState(book.price||0);
   const [id] = useState(book.id||'');
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
@@ -136,12 +136,12 @@ export default function PurchaseBook({isOpen,book,close}) {
                     </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
-                        name="price"
+                        name="total"
                         className={classes.fields}
                         variant="outlined"
                         required
                         fullWidth
-                        id="price"
+                        id="total"
                         value={total}
                         label="Total"
                       />

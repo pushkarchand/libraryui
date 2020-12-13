@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import React, { useReducer, useEffect } from "react";
 import { ToastContainer } from 'react-toastify';
-import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import "./App.css";
 import 'react-toastify/dist/ReactToastify.css';
@@ -14,7 +13,6 @@ import { stateContext } from './context';
 import { initialState, stateReducer } from './context/reducer';
 import Dashboard from './components/dashboard';
 import Orders from './components/orders';
-import { makeStyles } from "@material-ui/core/styles";
 
 function App() {
   const [state, dispatch] = useReducer(stateReducer, initialState);
@@ -43,9 +41,12 @@ function App() {
        )}
       </Router>
       <ToastContainer autoClose={5000} />
-      <Backdrop style={{zIndex:'10 !important'}} open={state.isLoading}>
-                  <CircularProgress color="inherit" />
-      </Backdrop>
+      {state.isLoading?(
+         <div className="backdrop">
+            <CircularProgress color="inherit" />
+        </div>
+      ):("")}
+     
       </stateContext.Provider>
     </ThemeProvider>
   );

@@ -14,10 +14,10 @@ import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import bookurl from '../assets/images/book.png';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
+/**
+ * Styles for the book component
+ */
 const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 345,
-  },
   media: {
     height: 0,
     paddingTop: '56.25%',
@@ -41,20 +41,32 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+/**
+ * Declaration for Book component
+ * @param {*} param0 
+ */
 export default function Book({book,purchaseBook,borrowBook}) {
   const classes = useStyles();
+  // Variable deaclartion for roleType to determine what to show for thr logedIn user
   const [roleType] = useState(Number(localStorage.getItem('role')))
 
+  /**
+   * Method to open the purchase book popup
+   */
   const purchase=()=>{
     purchaseBook(book);
   }
 
+  /**
+   * Method to open the borrow book popup
+   */
   const borrow=()=>{
     borrowBook(book)
   }
 
   return (
     <Card className={classes.root}>
+      {/* Card header with book tile and author name */}
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
@@ -64,16 +76,19 @@ export default function Book({book,purchaseBook,borrowBook}) {
         title={book.title}
         subheader={`-By ${book.publisher}`}
       />
+      {/* Book image */}
       <CardMedia
         className={classes.media}
         image={bookurl}
         title="Paella dish"
       />
+      {/* Book Description */}
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
          {book.description.length>125?`${book.description.slice(0,120)} . . .`:book.description}
         </Typography>
       </CardContent>
+      {/* card action like purchase borrow and pric eof the book */}
       <CardActions className={classes.footer}>
           <div>
             {roleType===1?(
@@ -82,13 +97,13 @@ export default function Book({book,purchaseBook,borrowBook}) {
                     <LocalLibraryIcon/>
                 </IconButton>
               </Tooltip>
-            ):(
+            ):roleType===2?(
               <Tooltip title="Purchse Book" aria-label="Purchase">
                   <IconButton aria-label="purchase" onClick={purchase}>
                       <ShoppingCartIcon />
                   </IconButton>
               </Tooltip>
-            )}
+            ):("")}
           </div>
         <Typography  color="textSecondary" component="p">
             $ {book.price}

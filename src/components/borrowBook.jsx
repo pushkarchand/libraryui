@@ -16,6 +16,9 @@ import {
 } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
 
+/**
+ * Styles for borrow book component
+ */
 const useStyles = makeStyles((theme) => ({
   form: {
     width: "100%", // Fix IE 11 issue.
@@ -29,36 +32,49 @@ const useStyles = makeStyles((theme) => ({
 
 var d = new Date();
 d.setDate(d.getDate()+parseInt(14));
+
+/**
+ * Borrow book component declaration
+ * @param {*} param0 
+ */
 export default function BorrowBook({isOpen,book,close}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(isOpen);
-  const [title] = useState(book.Title||'');
   const [issueDate, setIssueDate] = useState(new Date());
   const [returnDate, setReturnDate] = useState(d);
   const context = useContext(stateContext);
 
+  /**
+   * Method to close borrow book
+   */
   const handleClose = () => {
     setOpen(false);
     close();
   };
 
+  // Useeffect run when component loads for the first time and when isOpen variable changes
   useEffect(() => {
     console.log(book);
     setOpen(isOpen)
   }, [isOpen])
 
 
-  const saveBook= async (event)=>{
+  /**
+   * Mathod to save borrowed book
+   * @param {*} event 
+   */
+  const saveBorrowedBook= async (event)=>{
     event.preventDefault();
     try{
         context.dispatch(setIsLoading(true));
+        handleClose();
         const borrow={
-          UserCode:localStorage.getItem('UserId')||'',
-          BookCode:book.Id,
+          UserCode:localStorage.getItem('userCode')||'',
+          BookCode:book.bookCode,
           BorrowingDate: issueDate,
           ReturnDate: returnDate
         }
-        console.log(borrow);
+        const response= await postApi('SaveLoan',borrow);
         context.dispatch(setIsLoading(false));
         close();
     } catch(error){
@@ -78,15 +94,19 @@ export default function BorrowBook({isOpen,book,close}) {
       >
         <DialogTitle id="max-width-dialog-title">Borrow Book</DialogTitle>
         <DialogContent>
-        <form className={classes.form} onSubmit={saveBook}>
+          {/* Form for borrow book */}
+        <form className={classes.form} onSubmit={saveBorrowedBook}>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <Grid container justify="space-around">
+        {/* Header for borrow book */}
           <Grid item xs={12} sm={12}>
-             <Typography variant="body1" color="textPrimary" component="h3">{book.Title}</Typography>
-             <Typography variant="body2" color="textSecondary" component="p">By - {book.Author}</Typography>
+            {/* Book name */}
+             <Typography variant="body1" color="textPrimary" component="h3">{book.title}</Typography>
+             {/* Book author name */}
+             <Typography variant="body2" color="textSecondary" component="p">By - {book.author}</Typography>
           </Grid>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            
+            {/* Date input for borrowed date */}
                   <Grid item xs={12}>
                       <KeyboardDatePicker
                           disableToolbar
@@ -104,6 +124,7 @@ export default function BorrowBook({isOpen,book,close}) {
                           }}
                         />
                       </Grid>
+                {/* date selector for book return date */}
                   <Grid item xs={12}>
                       <KeyboardDatePicker
                           disableToolbar
@@ -122,6 +143,7 @@ export default function BorrowBook({isOpen,book,close}) {
                         />
                       </Grid>
                 </MuiPickersUtilsProvider>
+              {/* button to confirm the borrowed book */}
                 <Grid item xs={12} sm={12}>
                         <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                             Save

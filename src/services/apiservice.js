@@ -7,8 +7,7 @@ axiosApiInstance.interceptors.request.use(
     const tokenStr=localStorage.getItem('accessToken');
     config.headers = { 
       'Authorization': `Bearer ${tokenStr}`,
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json'
     }
     return config;
   },
@@ -17,6 +16,8 @@ axiosApiInstance.interceptors.request.use(
 });
 
 // Response interceptor for API calls
+// Checks for the error response and if the satus is 401
+// then Fetch the token and retry the original request again
 axiosApiInstance.interceptors.response.use((response) => {
   return response
 }, async function (error) {
@@ -30,14 +31,17 @@ axiosApiInstance.interceptors.response.use((response) => {
   return Promise.reject(error);
 });
 
+/**
+ * Method to refetch token on token expiry
+ */
 export async function refreshAccessToken(){
     const email= localStorage.getItem('emailId');
     const pass= localStorage.getItem('pass');
     const url=`ValidateUserLogin?email=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`;
-    const tokenStr=localStorage.getItem('accessToken');
-    return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`, { headers: {"Authorization" : `Bearer ${tokenStr}`} })
+    return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
     .then(response=>{
         let data = response.data;
+        console.log(data);
         localStorage.setItem('accessToken',data.token);
         localStorage.setItem('userId',data.userId);
         localStorage.setItem('role',data.roleType);
@@ -76,5 +80,21 @@ export async function postApi (url,argBody) {
     } catch(error){
         throw new Error(error);
     }
+}
+
+// Method to login user
+export async function login(url){
+  return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
+    .then(response=>{
+        let data = response.data;
+        console.log(data);
+        localStorage.setItem('accessToken',data.token);
+        localStorage.setItem('userId',data.userId);
+        localStorage.setItem('role',data.roleType);
+        localStorage.setItem('userCode',data.userCode);
+        return data;
+    }).catch(error=>{
+        throw new Error(error);            
+    })
 }
   
