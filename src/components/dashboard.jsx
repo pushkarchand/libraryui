@@ -2,15 +2,12 @@ import React,{useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Header from './header';
 import Book from './book';
-import {Books} from '../utils/constants';
 import Button from "@material-ui/core/Button";
 import { getApi } from '../services/apiservice';
-import { getApiByCategory } from '../services/apiservice';
 import AddBook from './addBook';
 import PurchaseBook from './purchaseBook';
 import BorrowBook from './borrowBook';
 import Paymentgateway from './paymentGateway';
-import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
   bookContainer:{
     display: 'grid',
@@ -39,24 +36,18 @@ export default function Dashborad() {
   const [purchaseBook, setpurchaseBook] = useState(null);
   const [borrowBook, setborrowBook] = useState(null);
   const [paymentBook, setPayment] = useState(null);
-
+  const [books, setBooks] = useState([])
   const fetchBooks=()=>{
     getApi('GetBook')
     .then(response=>{
-      console.log(response);
+      setBooks(response);
     },error => {
-      // if(error.status == 401) {
-      //   getApi('GetOrderByUserCode?userCode=ABC1')
-      //   .then(response=>{
-      //     console.log(response);
-      //   });
-      // }
       console.log(error);
     })
   }
 
   const fetchBooksCategories=()=>{
-    getApiByCategory('GetAllCategories')
+    getApi('GetAllCategories')
     .then(response=>{
       console.log(response);
     },error => {
@@ -116,7 +107,7 @@ export default function Dashborad() {
         </Button>
       </div>
       <div className={classes.bookContainer}>
-        {Books.map((item,index)=>(
+        {books.map((item,index)=>(
           <div key={`Book-${item.id}-${index}`} className={classes.book}>
             <Book book={item} 
                   //  purchaseBook={purchaseBookOpen} 

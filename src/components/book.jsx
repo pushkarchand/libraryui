@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -41,8 +41,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function RecipeReviewCard({book,purchaseBook,borrowBook}) {
+export default function Book({book,purchaseBook,borrowBook}) {
   const classes = useStyles();
+  const [roleType] = useState(Number(localStorage.getItem('role')))
 
   const purchase=()=>{
     purchaseBook(book);
@@ -57,11 +58,11 @@ export default function RecipeReviewCard({book,purchaseBook,borrowBook}) {
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
-            {book.Title.slice(0,2).toUpperCase()}
+            {book.title.slice(0,2).toUpperCase()}
           </Avatar>
         }
-        title={book.Title}
-        subheader={`-By ${book.Publisher}`}
+        title={book.title}
+        subheader={`-By ${book.publisher}`}
       />
       <CardMedia
         className={classes.media}
@@ -70,24 +71,27 @@ export default function RecipeReviewCard({book,purchaseBook,borrowBook}) {
       />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-         {book.Description.length>125?`${book.Description.slice(0,120)} . . .`:book.Description}
+         {book.description.length>125?`${book.description.slice(0,120)} . . .`:book.description}
         </Typography>
       </CardContent>
       <CardActions className={classes.footer}>
           <div>
-            <Tooltip title="Issue book" aria-label="issuebook">
+            {roleType===1?(
+              <Tooltip title="Issue book" aria-label="issuebook">
                 <IconButton aria-label="issue book" onClick={borrow}>
                     <LocalLibraryIcon/>
                 </IconButton>
-            </Tooltip>
-            <Tooltip title="Purchse Book" aria-label="Purchase">
-                <IconButton aria-label="purchase" onClick={purchase}>
-                    <ShoppingCartIcon />
-                </IconButton>
-            </Tooltip>
+              </Tooltip>
+            ):(
+              <Tooltip title="Purchse Book" aria-label="Purchase">
+                  <IconButton aria-label="purchase" onClick={purchase}>
+                      <ShoppingCartIcon />
+                  </IconButton>
+              </Tooltip>
+            )}
           </div>
         <Typography  color="textSecondary" component="p">
-            $ {book.Price}
+            $ {book.price}
         </Typography>
       </CardActions>
      </Card>
