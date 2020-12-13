@@ -67,11 +67,11 @@ export default function SignIn({ history }) {
         context.dispatch(setIsLoading(true));
         const url= `ValidateUserLogin?email=${encodeURIComponent(emailId)}&password=${encodeURIComponent(password)}`;
         const response= await getApi(url);
-        debugger;
         localStorage.setItem('accessToken',response.token);
         localStorage.setItem('userId',response.userId);
         localStorage.setItem('role',response.roleType);
         localStorage.setItem('userCode',response.userCode);
+        localStorage.setItem('emailId',encodeURIComponent(emailId));
         context.dispatch(setIsAuthenticated(true));
         history.push('/')
         context.dispatch(setIsLoading(false));

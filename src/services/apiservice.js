@@ -11,9 +11,37 @@ export async function getApi (url) {
             let data = response.data;
             return data;
         }).catch(error=>{
+            // const UNAUTHORIZED = 401;
+            // axios.interceptors.response.use(
+            //   response => response,
+            //   error => {
+            //     const {status} = error.response;
+            //     if (status === UNAUTHORIZED) {
+            //       // dispatch(userSignOut());
+            //     }
+            //     return Promise.reject(error);
+            //  }
+            // );
             console.log(error);
-            throw new Error(error);
+            throw new Error(error);            
         })
+}
+
+/**
+ * Common Get method
+ * @param {*} urlAllCategory : string
+ */
+export async function getApiByCategory (urlAllCategory) {
+
+    const tokenStr=localStorage.getItem('accessToken');
+    return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${urlAllCategory}`, { headers: {"Authorization" : `Bearer ${tokenStr}`} })
+    .then(response=>{
+        console.log(response);
+        let data = response.data;
+        return data;
+    }).catch(error=>{
+        throw new Error(error);            
+    })
 }
 
 
