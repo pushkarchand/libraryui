@@ -105,9 +105,9 @@ export default function Book({book,purchaseBook,borrowBook}) {
               </Tooltip>
             ):("")}
           </div>
-        <Typography  color="textSecondary" component="p">
+          {roleType!==1?(<Typography  color="textSecondary" component="p">
             $ {book.price}
-        </Typography>
+        </Typography>):("")}
       </CardActions>
      </Card>
   );

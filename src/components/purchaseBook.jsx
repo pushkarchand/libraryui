@@ -53,10 +53,11 @@ export default function PurchaseBook({isOpen,book,close}) {
           CreditCard:creditCardNo,
           OrderDateAndTime: new Date(),
           BookCode:id,
-          UserCode:localStorage.getItem('userId')||'',
+          UserCode:localStorage.getItem('userCode')||'',
           Price: price,
           Quantity: quantity
         }
+        const response= await postApi('SaveOrder',order);
         context.dispatch(setIsLoading(false));
         close();
     } catch(error){

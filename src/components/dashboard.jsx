@@ -14,7 +14,9 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import {stateContext} from '../context';
 import {setIsLoading} from '../context/action'
-
+import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+import SearchIcon from '@material-ui/icons/Search';
 /**
  * Dashboard component styles decleration
  */
@@ -32,9 +34,10 @@ const useStyles = makeStyles((theme) => ({
   },
   action:{
     display:'flex',
-    flexDirection:'row-reverse',
+    flexDirection:'row',
     padding:"10px 10px",
-    alignItems:"center"
+    alignItems:"center",
+    justifyContent:"space-between",
   },
   formControl: {
     margin: theme.spacing(1),
@@ -42,6 +45,19 @@ const useStyles = makeStyles((theme) => ({
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
+  },
+  leftaction:{
+    flexBasis:"50%",
+    position:'relative'
+  },
+  rightaction:{
+    flexBasis: "20%"
+  },
+  search:{
+    position:"absolute",
+    right: 0,
+    top: "10px",
+    cursor:"pointer"
   }
  }));
 
@@ -61,7 +77,9 @@ export default function Dashborad() {
   const [books, setBooks] = useState([]);
   const [displayBooks, setDisplayBooks] = useState([]);
   const [category, setcategory] = useState(-1);
-  const [listOfCategories, setListOfCategories] = useState([])
+  const [listOfCategories, setListOfCategories] = useState([]);
+  const [searchTitle, setsearchTitle] = useState('');
+  const [searchAuthor, setsearchAuthor] = useState('');
   const context = useContext(stateContext);
 
   /**
@@ -110,7 +128,7 @@ export default function Dashborad() {
       setDisplayBooks(books);
     } else{
       const filteredBooks=books.filter(item=>item.catId=== category);
-      context.dispatch(setIsLoading(true));
+      context.dispatch(setIsLoading(false));
       setDisplayBooks(filteredBooks);
     }
   }, [category]);
@@ -153,6 +171,7 @@ export default function Dashborad() {
   const closeAddNewBook=()=>{
     setisAddBookOpen(false);
     fetchBooks();
+    context.dispatch(setIsLoading(false));
   }
 
   /**
@@ -161,6 +180,7 @@ export default function Dashborad() {
   const closePurchaseBook=()=>{
     setIsPurchaseBookOpen(false);
     setpurchaseBook(null);
+    context.dispatch(setIsLoading(false));
   }
 
   /**
@@ -168,12 +188,14 @@ export default function Dashborad() {
    */
   const closeBorrowBook=()=>{
     setIsBorrowBookOpen(false);
-    setborrowBook(null);
+    setborrowBook( );
+    context.dispatch(setIsLoading(false));
   }
 
   const closePayment=()=>{
     setIsPaymentOpen(false);
-    setPayment(null);
+    setPayment( );
+    context.dispatch(setIsLoading(false));
   }
 
   /**
@@ -184,29 +206,80 @@ export default function Dashborad() {
     setcategory(argEvent.target.value);
   }
 
+  const searchBooks= async ()=>{
+      if(searchTitle || searchAuthor){
+        try{
+            context.dispatch(setIsLoading(true));
+            const url=`GetBookByNameOrAuthor?name=${searchTitle}&author=${searchAuthor}`;
+            const response= await getApi(url);
+            setBooks(response);
+            if(category!==-1){
+              const filteredBooks=response.filter(item=>item.catId=== category);
+              setDisplayBooks(filteredBooks);
+            } else{
+              setDisplayBooks(response);
+            }
+            context.dispatch(setIsLoading(false));
+        } catch(error){
+          context.dispatch(setIsLoading(false));
+        }
+      }
+  }
+
   return (
     <React.Fragment>
       <Header/>
       <div className={classes.action}>
-     {localStorage.getItem('role')==='3'?(  <Button variant="contained" color="primary" disableElevation onClick={addNewBook}>
-          Add new Book
-        </Button>):("")}
-        <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Category</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={category}
-            onChange={handleChangeInCategory}
-          >
-            <MenuItem value={-1}>All</MenuItem>
-            {
-              listOfCategories.length>0 && listOfCategories.map((item,index)=>(
-                <MenuItem key={`Book-${item.catId}-${index}`} value={item.catId}>{item.name}</MenuItem>
-              ))
-            }
-          </Select>
-      </FormControl>
+            <div className={classes.leftaction}>
+            <Grid container spacing={2}>
+                    <Grid item xs={5} sm={5}>
+                      <TextField
+                        name="searcgTitle"
+                        required
+                        fullWidth
+                        id="searcgTitle"
+                        onKeyPress={event => event.key === 'Enter'?searchBooks(event):null }
+                        value={searchTitle}
+                        onChange={(e)=>setsearchTitle(e.target.value)}
+                        label="Book title"
+                      />
+                    </Grid>
+                  <Grid item xs={6} sm={6}>
+                      <TextField
+                        name="searchAuthor"
+                        required
+                        fullWidth
+                        onKeyPress={event => event.key === 'Enter'?searchBooks(event):null}
+                        id="searchAuthor"
+                        value={searchAuthor}
+                        onChange={(e)=>setsearchAuthor(e.target.value)}
+                        label="Author"
+                      />
+                  </Grid>
+              </Grid>
+              <SearchIcon className={classes.search}/>
+            </div>
+            <div className={classes.rightaction}>
+                {localStorage.getItem('role')==='3'?(  <Button variant="contained" color="primary" disableElevation onClick={addNewBook}>
+                  Add new Book
+                </Button>):("")}
+                <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={category}
+                    onChange={handleChangeInCategory}
+                  >
+                    <MenuItem value={-1}>All</MenuItem>
+                    {
+                      listOfCategories.length>0 && listOfCategories.map((item,index)=>(
+                        <MenuItem key={`Book-${item.catId}-${index}`} value={item.catId}>{item.name}</MenuItem>
+                      ))
+                    }
+                  </Select>
+              </FormControl>
+          </div>
       </div>
       <div className={classes.bookContainer}>
         {displayBooks.map((item,index)=>(
