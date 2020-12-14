@@ -1,4 +1,4 @@
-import React,{useState, useContext, useEffect} from 'react';
+import React,{useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Header from './header';
@@ -37,16 +37,24 @@ const useStyles = makeStyles({
 
 
 
-export default function BookOrders() {
+export default function LoanedBooks() {
   const classes = useStyles();
   const [rows, setRows] = useState([]);
   useEffect(() => {
     fetchOrderDetails()
   },[])
 
+  const formatedDate=(date)=>{
+    return new Date(date).toLocaleDateString();
+  }
+
   const fetchOrderDetails=()=>{
-    getOrderBookApi(`GetOrderByUserCode?userCode=${localStorage.getItem('userCode')}`)
+    getOrderBookApi(`GetLoanByUserCode?userCode=${localStorage.getItem('userCode')}`)
     .then(response=>{
+      response.forEach(item=>{
+        item.borrowingDate= formatedDate(item.borrowingDate);
+        item.returnDate= formatedDate(item.borrowingDate);
+      })
       setRows(response)
     },error => {
       console.log(error);
@@ -62,19 +70,16 @@ export default function BookOrders() {
           <TableHead>
             <TableRow>
                 <TableCell align={'center'}>
-                  Order Id
+                  Loan Id
                 </TableCell>
                 <TableCell align={'center'}>
-                  Book code
+                  Book Code
                 </TableCell>
                 <TableCell align={'center'}>
-                  Price
+                  Borroed Date
                 </TableCell>
                 <TableCell align={'center'}>
-                  Quantity
-                </TableCell>
-                <TableCell align={'center'}>
-                  Total
+                  Return date
                 </TableCell>
             </TableRow>
           </TableHead>
@@ -82,20 +87,17 @@ export default function BookOrders() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                      <TableCell key={row.OrderId} align={'center'}>
-                        {row.OrderId}
+                      <TableCell key={row.loanId} align={'center'}>
+                        {row.loanId}
                       </TableCell>
-                      <TableCell key={row.book} align={'center'}>
-                        {row.book}
+                      <TableCell key={row.bookCode} align={'center'}>
+                        {row.bookCode}
                       </TableCell>
-                      <TableCell key={row.price} align={'center'}>
-                        {row.price}
+                      <TableCell key={row.borrowingDate} align={'center'}>
+                        {row.borrowingDate}
                       </TableCell>
-                      <TableCell key={row.quantity} align={'center'}>
-                        {row.quantity}
-                      </TableCell>
-                      <TableCell key={`Total=${row.OrderId}`} align={'center'}>
-                        {row.price * row.quantity}
+                      <TableCell key={row.returnDate} align={'center'}>
+                        {row.returnDate}
                       </TableCell>
                 </TableRow>
               );

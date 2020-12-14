@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import {getApiByCategory} from '../services/apiservice';
 import {postApi, getApi} from '../services/apiservice';
 import {stateContext} from '../context';
 import {setIsLoading} from '../context/action'
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
+    width:"100%"
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -51,6 +53,8 @@ export default function AddBook({history,isOpen,close}) {
   const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState(-1);
   const context = useContext(stateContext);
+  const [catType, setCatType] = useState('');
+  const options = [];
 
   /**
    * Method ti close Add book dialog
@@ -64,7 +68,8 @@ export default function AddBook({history,isOpen,close}) {
    * Useeffect method is executed only when the component  isloaded and when the isOpen value is changed
    */
   useEffect(() => {
-    setOpen(isOpen);
+    setOpen(isOpen)
+    fetchBooksCategories()
   }, [isOpen])
 
   // Useffect is executed only when component is loaded fetches all the categories
@@ -75,14 +80,14 @@ export default function AddBook({history,isOpen,close}) {
   /**
    * Method to fetch book categories
    */
-  const fetchBooksCategories=()=>{
-    getApi('GetAllCategories')
-    .then(response=>{
-      setCategories(response);
-    },error => {
-      console.log(error);
-    })
-  }
+  // const fetchBooksCategories=()=>{
+  //   getApi('GetAllCategories')
+  //   .then(response=>{
+  //     setCategories(response);
+  //   },error => {
+  //     console.log(error);
+  //   })
+  // }
 
   /**
    * Form submit method to save the book
@@ -108,6 +113,21 @@ export default function AddBook({history,isOpen,close}) {
     }
   }
 
+  const fetchBooksCategories=()=>{
+    let allData;
+    getApiByCategory('GetAllCategories')
+    .then(response=>{
+      allData = response;
+      for(let i=0;i<allData.length;i++) {
+        options.push({
+          value: allData[i].catId,
+          label: allData[i].name
+        });
+      }
+    },error => {
+      console.log(error);
+    })
+  }
   /**
    * Method to handle the change in category selected
    * @param {*} argEvent 
@@ -117,6 +137,9 @@ export default function AddBook({history,isOpen,close}) {
   }
 
 
+  const handleChangeInCatType = (event) => {
+    setCatType(event.label);
+  };
 
   return (
     <React.Fragment>
@@ -228,7 +251,14 @@ export default function AddBook({history,isOpen,close}) {
                     </Grid>
                     {/* Button to save the book */}
                     <Grid item xs={12} sm={12}>
-                        <Button type="submit" fullWidth variant="contained" color="primary" disabled={!title || !author || !publisher || !price || !description || !category} className={classes.submit}>
+                    <Select className={classes.formControl}
+                        value={catType}
+                        onChange={handleChangeInCatType}
+                        options={options}
+                    />
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                        <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
                             Save
                         </Button>
                     </Grid>

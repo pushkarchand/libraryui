@@ -66,6 +66,34 @@ export async function getApi (url) {
         })
 }
 
+/**
+ * Common Get method
+ * @param {*} url : string
+ */
+export async function getApiByCategory (url) {
+  return axiosApiInstance.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
+  .then(response=>{
+      let data = response.data;
+      return data;
+  }).catch(error=>{
+      throw new Error(error);            
+  })
+}
+
+/**
+ * Common Get method
+ * @param {*} url : string
+ */
+export async function getOrderBookApi (url) {
+  return axiosApiInstance.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
+  .then(response=>{
+      let data = response.data;
+      return data;
+  }).catch(error=>{
+      throw new Error(error);            
+  })
+}
+
 
 /**
  * Common API to Create an Entity / common post API

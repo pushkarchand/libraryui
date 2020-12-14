@@ -13,7 +13,7 @@ import { stateContext } from './context';
 import { initialState, stateReducer } from './context/reducer';
 import Dashboard from './components/dashboard';
 import Orders from './components/orders';
-
+import Loans from './components/loans';
 function App() {
   const [state, dispatch] = useReducer(stateReducer, initialState);
   useEffect(() => {
@@ -29,6 +29,7 @@ function App() {
             <Switch>
               <Route exact path="/" component={Dashboard} />
              <Route exact path="/orders" component={Orders} />
+             <Route exact path="/loans" component={Loans} />
              <Route exact path="*" component={Dashboard} />
             </Switch>
         </div>
