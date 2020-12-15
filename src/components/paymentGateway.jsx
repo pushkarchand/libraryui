@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
     action:{
       display:"flex",
       justifyContent:"space-between"
+    },
+    actnbtn:{
+      width:"48%"
     }
 }));
 
@@ -52,13 +55,13 @@ export default function Paymentgateway({isOpen,close}) {
         <DialogTitle id="max-width-dialog-title">Payment Gateway</DialogTitle>
         <DialogContent  className={classes.dialogBody}>
             <h3>Hi. Do you want to proceed to checkout?</h3>
-            <div className={classes.action}>
+            <div>
               {checkout ? (
                 <PayPal/>
                ) : (
-                 <div>
-                  <Button fullWidth variant="contained" color="primary" onClick={handleClose}>Cancel</Button>
-                  <Button fullWidth variant="contained" color="primary" onClick={() => {
+                 <div className={classes.action}>
+                  <Button  className={classes.actnbtn} variant="contained" color="basic" onClick={handleClose}>Cancel</Button>
+                  <Button  className={classes.actnbtn} variant="contained" color="primary" onClick={() => {
                     setCheckout(true);
                   }}>Checkout</Button>
               </div>

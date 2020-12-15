@@ -180,6 +180,7 @@ export default function Dashborad() {
    * Method to close purchase book popup
    */
     const closePurchaseBook=(arg)=>{
+      debugger;
       if(arg) {
         context.dispatch(setPaymentOpen(true));
       }
@@ -193,7 +194,7 @@ export default function Dashborad() {
    */
   const closeBorrowBook=()=>{
     setIsBorrowBookOpen(false);
-    setborrowBook( );
+    setborrowBook(null);
     context.dispatch(setIsLoading(false));
   }
 

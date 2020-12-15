@@ -4,7 +4,6 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {getApiByCategory} from '../services/apiservice';
 import {postApi, getApi} from '../services/apiservice';
 import {stateContext} from '../context';
 import {setIsLoading} from '../context/action'
@@ -115,7 +114,7 @@ export default function AddBook({history,isOpen,close}) {
 
   const fetchBooksCategories=()=>{
     let allData;
-    getApiByCategory('GetAllCategories')
+    getApi('GetAllCategories')
     .then(response=>{
       allData = response;
       for(let i=0;i<allData.length;i++) {

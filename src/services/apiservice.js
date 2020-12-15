@@ -8,7 +8,10 @@ axiosApiInstance.interceptors.request.use(
     config.headers = { 
       'Authorization': `Bearer ${tokenStr}`,
       'Content-Type': 'application/json',
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Credentials": "true",
+      "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+      "Access-Control-Allow-Headers": "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
     }
     return config;
   },
@@ -67,33 +70,7 @@ export async function getApi (url) {
         })
 }
 
-/**
- * Common Get method
- * @param {*} url : string
- */
-export async function getApiByCategory (url) {
-  return axiosApiInstance.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
-  .then(response=>{
-      let data = response.data;
-      return data;
-  }).catch(error=>{
-      throw new Error(error);            
-  })
-}
 
-/**
- * Common Get method
- * @param {*} url : string
- */
-export async function getOrderBookApi (url) {
-  return axiosApiInstance.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
-  .then(response=>{
-      let data = response.data;
-      return data;
-  }).catch(error=>{
-      throw new Error(error);            
-  })
-}
 
 
 /**
@@ -113,7 +90,12 @@ export async function postApi (url,argBody) {
 
 // Method to login user
 export async function login(url){
-  return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`,{headers:{'Access-Control-Allow-Origin': '*'}})
+  return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`,{headers:{
+    'Access-Control-Allow-Origin': '*',
+    "Access-Control-Allow-Credentials": "true",
+    "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
+    "Access-Control-Allow-Headers": "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+  }})
     .then(response=>{
         let data = response.data;
         console.log(data);

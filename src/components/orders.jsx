@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import {getOrderBookApi} from '../services/apiservice';
+import {getApi} from '../services/apiservice';
 
 const useStyles = makeStyles({
   root: {
@@ -45,7 +45,7 @@ export default function BookOrders() {
   },[])
 
   const fetchOrderDetails=()=>{
-    getOrderBookApi(`GetOrderByUserCode?userCode=${localStorage.getItem('userCode')}`)
+    getApi(`GetOrderByUserCode?userCode=${localStorage.getItem('userCode')}`)
     .then(response=>{
       setRows(response)
     },error => {

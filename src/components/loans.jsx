@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import {getApi, getOrderBookApi} from '../services/apiservice';
+import {getApi} from '../services/apiservice';
 
 const useStyles = makeStyles({
   root: {
