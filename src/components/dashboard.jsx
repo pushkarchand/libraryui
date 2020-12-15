@@ -180,7 +180,6 @@ export default function Dashborad() {
    * Method to close purchase book popup
    */
     const closePurchaseBook=(arg)=>{
-      debugger;
       if(arg) {
         context.dispatch(setPaymentOpen(true));
       }
@@ -200,6 +199,7 @@ export default function Dashborad() {
 
   const closePayment=()=>{
     context.dispatch(setIsLoading(false));
+    context.dispatch(setPaymentOpen(false));
   }
 
   /**
@@ -262,6 +262,7 @@ export default function Dashborad() {
                   </Grid>
               </Grid>
               <SearchIcon className={classes.search}/>
+              {context.state.paymentOpen}
             </div>
             <div className={classes.rightaction}>
                 <FormControl className={classes.formControl}>

@@ -1,4 +1,4 @@
-import React,{useState, useEffect, useContext} from 'react';
+import React,{useState, useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -25,8 +25,8 @@ export default function Paymentgateway({isOpen,close}) {
   const [checkout, setCheckout] = useState(false);
 
   const handleClose = () => {
-    setOpen(false);
     close();
+    setOpen(false);
   };
   useEffect(() => {
     setOpen(isOpen)
