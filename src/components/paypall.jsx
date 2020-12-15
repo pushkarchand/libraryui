@@ -26,12 +26,17 @@ export default function PayPal() {
                 })
             },
             onApprove: async (data, actions) => {
+                debugger;
                 const order = await actions.order.capture();
-                const orderResponse = await postApi('SaveOrder', context.state.purchasedBook);
+                const payLoad= JSON.parse(JSON.stringify(context.state.purchasedBook));
+                delete payLoad.BookName;
+                payLoad.Quantity=Number(payLoad.Quantity);
+                const orderResponse = await postApi('SaveOrder',payLoad );
                 context.dispatch(setPaymentOpen(false));
-                Notify.sendNotification('Successfully placed order', AlertTypes.success)
+                Notify.sendNotification('Successfully placed order', AlertTypes.success);
             },
             onError: (error) => {
+                debugger;
                 console.log(error);
                 context.dispatch(setPaymentOpen(false));
                 Notify.sendNotification('Failed to place an order', AlertTypes.error)

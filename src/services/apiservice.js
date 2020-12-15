@@ -81,7 +81,7 @@ export async function getApi (url) {
 export async function postApi (url,argBody) {
     try{
         let response = await axiosApiInstance.post(`${process.env["REACT_APP_BACKEND_API"]}${url}`,JSON.stringify(argBody));
-        let data = await response.json();
+        let data =  response.data;
         return data;
     } catch(error){
         throw new Error(error);

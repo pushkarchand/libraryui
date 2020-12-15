@@ -53,7 +53,7 @@ export default function PurchaseBook({isOpen,book,close}) {
         const order={
           CreditCard:creditCardNo,
           OrderDateAndTime: new Date(),
-          BookCode:id,
+          BookCode:book.bookCode,
           UserCode:localStorage.getItem('userCode')||'',
           Price: price,
           Quantity: quantity,

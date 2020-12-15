@@ -261,7 +261,7 @@ export default function Dashborad() {
                       />
                   </Grid>
               </Grid>
-              <SearchIcon className={classes.search}/>
+              <SearchIcon className={classes.search} onClick={searchBooks}/>
               {context.state.paymentOpen}
             </div>
             <div className={classes.rightaction}>

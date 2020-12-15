@@ -82,11 +82,11 @@ export default function BookOrders() {
             {rows.map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                      <TableCell key={row.OrderId} align={'center'}>
-                        {row.OrderId}
+                      <TableCell key={row.orderId} align={'center'}>
+                        {row.orderId}
                       </TableCell>
-                      <TableCell key={row.book} align={'center'}>
-                        {row.book}
+                      <TableCell key={row.bookCode} align={'center'}>
+                        {row.bookCode}
                       </TableCell>
                       <TableCell key={row.price} align={'center'}>
                         {row.price}
