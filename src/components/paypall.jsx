@@ -33,6 +33,8 @@ export default function PayPal() {
             },
             onError: (error) => {
                 console.log(error);
+                context.dispatch(setPaymentOpen(false));
+                Notify.sendNotification('Failed to place an order', AlertTypes.error)
             }
         }).render(paypal.current);
     }, [])
