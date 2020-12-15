@@ -7,7 +7,8 @@ axiosApiInstance.interceptors.request.use(
     const tokenStr=localStorage.getItem('accessToken');
     config.headers = { 
       'Authorization': `Bearer ${tokenStr}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
     }
     return config;
   },
@@ -112,7 +113,7 @@ export async function postApi (url,argBody) {
 
 // Method to login user
 export async function login(url){
-  return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`)
+  return axios.get(`${process.env["REACT_APP_BACKEND_API"]}${url}`,{headers:{'Access-Control-Allow-Origin': '*'}})
     .then(response=>{
         let data = response.data;
         console.log(data);

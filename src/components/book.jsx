@@ -80,7 +80,7 @@ export default function Book({book,purchaseBook,borrowBook}) {
       <CardMedia
         className={classes.media}
         image={bookurl}
-        title="Paella dish"
+        title={book.title}
       />
       {/* Book Description */}
       <CardContent>

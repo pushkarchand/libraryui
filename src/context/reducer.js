@@ -1,8 +1,10 @@
-import {IS_AUTHENTICATED,USERNAME, ISLOADING} from './action';
+import {IS_AUTHENTICATED,USERNAME, ISLOADING, PURCHASE,PAYMENTOPEN} from './action';
 export const initialState={
     isAuthenticated:localStorage.getItem('accessToken')?true:false,
     userName:"",
-    isLoading: false
+    isLoading: false,
+    purchasedBook: null,
+    paymentOpen: false
 }
 
 export const stateReducer=(state=initialState,action)=>{
@@ -23,6 +25,18 @@ export const stateReducer=(state=initialState,action)=>{
             return {
                 ...state,
                 isLoading:action.payload
+            }
+        }
+        case PURCHASE:{
+            return {
+                ...state,
+                purchasedBook:action.payload
+            }
+        }
+        case PAYMENTOPEN:{
+            return {
+                ...state,
+                paymentOpen:action.payload
             }
         }
         default: return state

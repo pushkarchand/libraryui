@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import {stateContext} from '../context';
-import {setIsLoading} from '../context/action'
+import {setIsLoading, setPaymentOpen} from '../context/action'
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import SearchIcon from '@material-ui/icons/Search';
@@ -51,13 +51,22 @@ const useStyles = makeStyles((theme) => ({
     position:'relative'
   },
   rightaction:{
-    flexBasis: "20%"
+    flexBasis: "20%",
+    display:"flex",
+    alignItems:"center",
+    justifyContent:"space-between"
   },
   search:{
     position:"absolute",
     right: 0,
     top: "10px",
     cursor:"pointer"
+  },
+  noBooks:{
+    display: "flex",
+    justifyContent: "center",
+    height: "30vh",
+    alignItems: "center",
   }
  }));
 
@@ -69,11 +78,9 @@ export default function Dashborad() {
   const classes = useStyles();
   const [isAddBookOpen, setisAddBookOpen] = useState(false);
   const [isBorrowBookOpen, setIsBorrowBookOpen] = useState(false);
-  const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isPurchaseBookOpen, setIsPurchaseBookOpen] = useState(false);
   const [purchaseBook, setpurchaseBook] = useState(null);
   const [borrowBook, setborrowBook] = useState(null);
-  const [paymentBook, setPayment] = useState(null);
   const [books, setBooks] = useState([]);
   const [displayBooks, setDisplayBooks] = useState([]);
   const [category, setcategory] = useState(-1);
@@ -160,11 +167,6 @@ export default function Dashborad() {
     setIsBorrowBookOpen(true);
   }
 
-  const paymentOpen=(argBook)=>{
-    setPayment(argBook)
-    setIsPaymentOpen(true);
-  }
-
   /**
    * Method to close Addnew book popup
    */
@@ -177,10 +179,13 @@ export default function Dashborad() {
   /**
    * Method to close purchase book popup
    */
-  const closePurchaseBook=()=>{
-    setIsPurchaseBookOpen(false);
-    setpurchaseBook(null);
-    context.dispatch(setIsLoading(false));
+    const closePurchaseBook=(arg)=>{
+      if(arg) {
+        context.dispatch(setPaymentOpen(true));
+      }
+      setIsPurchaseBookOpen(false);
+      setpurchaseBook(null);
+      context.dispatch(setIsLoading(false));
   }
 
   /**
@@ -193,8 +198,6 @@ export default function Dashborad() {
   }
 
   const closePayment=()=>{
-    setIsPaymentOpen(false);
-    setPayment( );
     context.dispatch(setIsLoading(false));
   }
 
@@ -260,9 +263,6 @@ export default function Dashborad() {
               <SearchIcon className={classes.search}/>
             </div>
             <div className={classes.rightaction}>
-                {localStorage.getItem('role')==='3'?(  <Button variant="contained" color="primary" disableElevation onClick={addNewBook}>
-                  Add new Book
-                </Button>):("")}
                 <FormControl className={classes.formControl}>
                 <InputLabel id="demo-simple-select-label">Category</InputLabel>
                   <Select
@@ -279,22 +279,31 @@ export default function Dashborad() {
                     }
                   </Select>
               </FormControl>
+              {localStorage.getItem('role')==='3'?(  <Button variant="contained" color="primary" disableElevation onClick={addNewBook}>
+                  Add new Book
+                </Button>):("")}
           </div>
       </div>
-      <div className={classes.bookContainer}>
-        {displayBooks.map((item,index)=>(
-          <div key={`Book-${item.id}-${index}`} className={classes.book}>
-            <Book book={item} 
-                   purchaseBook={purchaseBookOpen} 
-                  //  purchaseBook={paymentOpen} 
-                   borrowBook={borrowBookOpen}/>
-          </div>
-          ))}
-      </div>
+      
+        {displayBooks.length>0?
+        (
+          <div className={classes.bookContainer}>
+            {
+              displayBooks.map((item,index)=>(
+                  <div key={`Book-${item.id}-${index}`} className={classes.book}>
+                    <Book book={item} 
+                          purchaseBook={purchaseBookOpen} 
+                          borrowBook={borrowBookOpen}/>
+                  </div>
+              ))}
+          </div>):(
+          <div className={classes.noBooks}>
+            <h3>No books found</h3>
+          </div>)}
       {isAddBookOpen?(<AddBook isOpen={isAddBookOpen} close={closeAddNewBook}/>):("")}
       {isPurchaseBookOpen && purchaseBook?(<PurchaseBook isOpen={isPurchaseBookOpen} close={closePurchaseBook} book={purchaseBook}/>):("")}
       {isBorrowBookOpen && borrowBook?(<BorrowBook isOpen={isBorrowBookOpen} close={closeBorrowBook} book={borrowBook}/>):("")}
-      {isPaymentOpen && paymentBook?(<Paymentgateway isOpen={isPaymentOpen} close={closePayment} book={paymentBook}/>):("")}
+      {context.state.paymentOpen ?(<Paymentgateway isOpen={context.state.paymentOpen} close={closePayment}/>):("")}
 
     </React.Fragment>
   );

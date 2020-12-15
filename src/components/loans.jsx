@@ -8,7 +8,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import {getOrderBookApi} from '../services/apiservice';
+import {getApi, getOrderBookApi} from '../services/apiservice';
 
 const useStyles = makeStyles({
   root: {
@@ -49,7 +49,7 @@ export default function LoanedBooks() {
   }
 
   const fetchOrderDetails=()=>{
-    getOrderBookApi(`GetLoanByUserCode?userCode=${localStorage.getItem('userCode')}`)
+    getApi(`GetLoanByUserCode?userCode=${localStorage.getItem('userCode')}`)
     .then(response=>{
       response.forEach(item=>{
         item.borrowingDate= formatedDate(item.borrowingDate);

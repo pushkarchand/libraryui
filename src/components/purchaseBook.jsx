@@ -9,6 +9,7 @@ import {stateContext} from '../context';
 import {setIsLoading} from '../context/action'
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
+import {setPurchaseItem} from "../context/action";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -26,7 +27,7 @@ export default function PurchaseBook({isOpen,book,close}) {
   const [open, setOpen] = React.useState(isOpen);
   const [title] = useState(book.title||'');
   const [price, setPrice] = useState(book.price||0);
-  const [id] = useState(book.id||'');
+  const [id] = useState(book.bookId||'');
   const [quantity, setQuantity] = useState(1);
   const [total, setTotal] = useState(0);
   const [creditCardNo, setcreditCardNo] = useState('');
@@ -55,11 +56,12 @@ export default function PurchaseBook({isOpen,book,close}) {
           BookCode:id,
           UserCode:localStorage.getItem('userCode')||'',
           Price: price,
-          Quantity: quantity
+          Quantity: quantity,
+          BookName: title
         }
-        const response= await postApi('SaveOrder',order);
+        context.dispatch(setPurchaseItem(order));
         context.dispatch(setIsLoading(false));
-        close();
+        close(true);
     } catch(error){
       context.dispatch(setIsLoading(false));
     }

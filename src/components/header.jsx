@@ -1,4 +1,4 @@
-import React,{useState,useContext} from "react";
+import React,{useContext} from "react";
 import { useHistory } from "react-router-dom"
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     display: 'none',
+    cursor:"pointer",
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
@@ -119,6 +120,10 @@ export default function PrimarySearchAppBar() {
     history.push("loans");
   };
 
+  const routeToHome=()=>{
+    history.push("/");
+  }
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -164,13 +169,15 @@ export default function PrimarySearchAppBar() {
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar>
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h6" noWrap onClick={routeToHome}>
             Library System
           </Typography>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-          <Button  variant="contained" color="primary" onClick={routeToOrders}>Orders</Button>
-          <Button  variant="contained" color="primary" onClick={routeToLoans}>Loans</Button>
+            {localStorage.getItem('role')==='1'?(
+              <Button  variant="contained" color="primary" onClick={routeToLoans}>Loans</Button>
+            ):localStorage.getItem('role')==='2'?( <Button  variant="contained" color="primary" onClick={routeToOrders}>Orders</Button>):("")}
+          
             <IconButton
               edge="end"
               aria-label="account of current user"
